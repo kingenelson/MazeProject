@@ -3,7 +3,6 @@ export default class Player {
         // how big the player is
         this.width = 50;
         this.height = 50;
-
         // speed of player
         this.maxSpeed = {
             x: 5,
@@ -18,10 +17,11 @@ export default class Player {
         this.position = {
             x: gameWidth / 2 - this.width / 2,
             y: gameHeight / 2 - this.height / 2
-        }
+        };
     }
 
     draw(ctx) {
+        // alert('drawing');
         ctx.fillStyle = '#FF0000"';
         ctx.fillRect(this.position.x, this.position.y,
             this.width, this.height);
