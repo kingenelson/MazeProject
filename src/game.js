@@ -2,6 +2,8 @@ import Player from './player.js';
 import InputHandler from './input.js';
 "use strict";
 
+// will have 3 gamestates (menu, game, gameover)
+
 export default class Game {
     constructor(gameWidth, gameHeight) {
         this.gameSize = {
