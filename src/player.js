@@ -1,17 +1,18 @@
 "use strict";
 export default class Player {
     constructor(game) {
-        // how big the player is
-        this.gameWidth = game.gameSize.x;
-        this.gameHeight = game.gameSize.y;
-        // console.log(this.gameWidth + " " + this.gameHeight);
 
-        this.width = 20;
-        this.height = 20;
+        // this.gameWidth = game.gameSize.x;
+        // this.gameHeight = game.gameSize.y;
+
+        // how big the player is
+        this.width = 7;
+        this.height = 7;
+
         // speed of player
         this.maxSpeed = {
-            x: 5,
-            y: 5
+            x: 4,
+            y: 4
         };
         this.speed = {
             x: 0,
@@ -20,17 +21,15 @@ export default class Player {
 
         // starting position of player
         this.position = {
-            x: this.gameWidth / 2 - this.width / 2,
-            y: this.gameHeight / 2 - this.height / 2
+            x: 3,
+            y: 3
         };
     }
 
     draw(ctx) {
-        // alert('drawing');
-        ctx.fillStyle = '#FF0000"';
+        ctx.fillStyle = '#FF0000';
         ctx.fillRect(this.position.x, this.position.y,
             this.width, this.height);
-        // console.log('test');
     }
 
     move(direction) {
@@ -49,13 +48,13 @@ export default class Player {
         this.position.y += this.speed.y;
 
         // game border collision detection
-        if (this.position.x < 1) this.position.x = 1;
-        if (this.position.y < 1) this.position.y = 1;
-        if (this.position.x > this.gameWidth - this.width - 1) {
-            this.position.x = this.gameWidth - this.width - 1;
-        }
-        if (this.position.y > this.gameHeight - this.height - 1) {
-            this.position.y = this.gameHeight - this.height;
-        }
+        // if (this.position.x < 1)
+        //     this.position.x = 1;
+        // if (this.position.y < 1)
+        //     this.position.y = 1;
+        // if (this.position.x > this.gameWidth - this.width - 1)
+        //     this.position.x = this.gameWidth - this.width - 1;
+        // if (this.position.y > this.gameHeight - this.height - 1)
+        //     this.position.y = this.gameHeight - this.height;
     }
 }

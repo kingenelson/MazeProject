@@ -1,29 +1,44 @@
 import Player from './player.js';
 import InputHandler from './input.js';
+import Level from './level.js';
 "use strict";
 
 // will have 3 gamestates (menu, game, gameover)
 
 export default class Game {
-    constructor(gameWidth, gameHeight) {
+    constructor() {
         this.gameSize = {
-            x: gameWidth,
-            y: gameHeight
+            x: 0,
+            y: 0
         };
+    }
 
-        // console.log(this.gameSize.x + " " + this.gameSize.y);
-
+    start() {
+        this.level = new Level(75, 100);
+        this.level.wilson_algo();
         this.player = new Player(this);
-
         new InputHandler(this.player);
+
     }
 
     draw(ctx) {
+        this.level.draw(ctx);
         this.player.draw(ctx);
-        // console.log('test');
     }
 
     update(deltaTime) {
         this.player.update(deltaTime);
     }
+
+    // collisionDetection(player, level) {
+    //     // game border collision detection
+    //     if (player.position.x < 2)
+    //         player.position.x = 2;
+    //     if (player.position.y < 2)
+    //         player.position.y = 2;
+    //     if (player.position.x + player.width >  - 2)
+    //         player.position.x = this.gameWidth - this.width - 1;
+    //     if (player.position.y + player.height > this.gameHeight - 2)
+    //         player.position.y = this.gameHeight - this.height;
+    // }
 }
