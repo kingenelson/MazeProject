@@ -4,7 +4,7 @@ export default class Level {
         this.row = row;
         this.col = col;
         // this.cellSize of cell
-        this.cellSize = 10;
+        this.cellSize = 256;
         this.maze = [];
         for (let i = 0; i < this.row; i++) {
             this.maze[i] = [];
@@ -18,11 +18,12 @@ export default class Level {
         // sets canvas to fit # of cells
         ctx.canvas.width = (this.col * this.cellSize);
         ctx.canvas.height = (this.row * this.cellSize);
+        let wallW = 1;//Math.floor(this.cellSize / 4);
         // draws the cells onto the canvas
         for (let i = 0; i < this.row; i++) {
             for (let j = 0; j < this.col; j++) {
                 // ctx.fillStyle = '#A0A0A0';
-                ctx.fillStyle = '#FFF';
+                ctx.fillStyle = '#FFFFFF';
                 // if (this.maze[i][j].isGoal)
                 //     ctx.fillStyle = '#00FF00';
                 ctx.fillRect(j * this.cellSize, i * this.cellSize, this.cellSize, this.cellSize);
@@ -31,28 +32,28 @@ export default class Level {
                     ctx.beginPath();
                     ctx.moveTo(j * this.cellSize, i * this.cellSize);
                     ctx.lineTo(j * this.cellSize, i * this.cellSize + this.cellSize);
-                    ctx.lineWidth = 2;
+                    ctx.lineWidth = wallW;
                     ctx.stroke();
                 }
                 if (this.maze[i][j].walls[1]) {// top wall
                     ctx.beginPath();
                     ctx.moveTo(j * this.cellSize, i * this.cellSize);
                     ctx.lineTo(j * this.cellSize + this.cellSize, i * this.cellSize);
-                    ctx.lineWidth = 2;
+                    ctx.lineWidth = wallW;
                     ctx.stroke();
                 }
                 if (this.maze[i][j].walls[2]) {// right wall
                     ctx.beginPath();
                     ctx.moveTo(j * this.cellSize + this.cellSize, i * this.cellSize + this.cellSize);
                     ctx.lineTo(j * this.cellSize + this.cellSize, i * this.cellSize);
-                    ctx.lineWidth = 2;
+                    ctx.lineWidth = wallW;
                     ctx.stroke();
                 }
                 if (this.maze[i][j].walls[3]) {// bottom wall
                     ctx.beginPath();
                     ctx.moveTo(j * this.cellSize + this.cellSize, i * this.cellSize + this.cellSize);
                     ctx.lineTo(j * this.cellSize, i * this.cellSize + this.cellSize);
-                    ctx.lineWidth = 2;
+                    ctx.lineWidth = wallW;
                     ctx.stroke();
                 }
             }
@@ -132,6 +133,22 @@ export default class Level {
             }
         }
     }
+
+    // test
+    test_algo() {
+        for (let i = 0; i < this.row; i++) {
+            for (let j = 0; j < this.col; j++) {
+                for (let w = 0; w < this.maze[i][j].walls.length; w++) {
+                    this.maze[i][j].walls[w] = false;
+                }
+                if (i == 1 && j == 1) {
+                    for (let w = 0; w < this.maze[i][j].walls.length; w++) {
+                        this.maze[i][j].walls[w] = true;
+                    }
+                }
+            }
+        }
+    }
 }
 
 // change this to a function format
@@ -152,9 +169,27 @@ class Cell {
         // this.isGoal = false;
     }
 
+    // returns a list of neighbors for this given cell ([row, col])
+    // row and col are the size of the maze
+    getNeighbors(row, col) {
+        let neighbors = [];
+        if (this.i - 1 >= 0) //up
+            neighbors.push([this.i - 1, this.j]);
+        if (this.j - 1 >= 0) //left
+            neighbors.push([this.i, this.j - 1]);
+        if (this.i + 1 < row) //down
+            neighbors.push([this.i + 1, this.j]);
+        if (this.j + 1 < col) //right
+            neighbors.push([this.i, this.j + 1]);
+        return neighbors;
+    }
+
     // returns random next neighbor ([row, col])
     // input: previous Cell's ([row, col]), rows in maze, col in maze
     nextNeighbor(prev, row, col) {
+        let neighbors = this.getNeighbors(row, col);
+
+
         //corners
         if (this.i - 1 < 0 && this.j - 1 < 0) { //top left
             if (prev === undefined) {
