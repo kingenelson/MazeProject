@@ -1,7 +1,6 @@
 import Player from './player.js';
 import InputHandler from './input.js';
 import Level from './level.js';
-"use strict";
 
 // will have 3 gamestates (menu, game, gameover)
 
@@ -14,8 +13,8 @@ export default class Game {
     }
 
     start() {
-        this.level = new Level(3, 3);
-        this.level.test_algo();
+        this.level = new Level(75, 150);
+        this.level.wilson_algo();
         this.player = new Player(this);
         new InputHandler(this.player);
 

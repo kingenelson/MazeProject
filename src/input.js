@@ -1,4 +1,3 @@
-"use strict";
 export default class InputHandler {
     constructor(player) {
         let direction = {};
@@ -6,11 +5,12 @@ export default class InputHandler {
 
             direction[event.keyCode] = true;
             player.move(direction);
-        });
-        document.addEventListener('keyup', (event) => {
-
             direction[event.keyCode] = false;
-            player.move(direction);
         });
+        // document.addEventListener('keyup', (event) => {
+
+        //     direction[event.keyCode] = false;
+        //     player.move(direction);
+        // });
     }
 }

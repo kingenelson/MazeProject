@@ -4,7 +4,7 @@ export default class Level {
         this.row = row;
         this.col = col;
         // this.cellSize of cell
-        this.cellSize = 256;
+        this.cellSize = 10;
         this.maze = [];
         for (let i = 0; i < this.row; i++) {
             this.maze[i] = [];
@@ -19,11 +19,12 @@ export default class Level {
         ctx.canvas.width = (this.col * this.cellSize);
         ctx.canvas.height = (this.row * this.cellSize);
         let wallW = 1;//Math.floor(this.cellSize / 4);
+
         // draws the cells onto the canvas
         for (let i = 0; i < this.row; i++) {
             for (let j = 0; j < this.col; j++) {
-                // ctx.fillStyle = '#A0A0A0';
-                ctx.fillStyle = '#FFFFFF';
+                ctx.fillStyle = '#add8e6';
+                // ctx.fillStyle = '#FFFFFF';
                 // if (this.maze[i][j].isGoal)
                 //     ctx.fillStyle = '#00FF00';
                 ctx.fillRect(j * this.cellSize, i * this.cellSize, this.cellSize, this.cellSize);
@@ -62,7 +63,6 @@ export default class Level {
 
     // implementation of wilson's algo
     wilson_algo() {
-        // array for the path in the
         // https://github.com/davidbau/seedrandom
         // ^ See for random seed implementation
 
