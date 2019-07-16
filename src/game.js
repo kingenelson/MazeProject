@@ -13,7 +13,7 @@ export default class Game {
     }
 
     start() {
-        this.level = new Level(75, 150);
+        this.level = new Level(50, 75);
         this.level.wilson_algo();
         this.player = new Player(this);
         new InputHandler(this.player);

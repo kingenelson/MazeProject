@@ -3,8 +3,8 @@ export default class Level {
         // TODO handle bad input
         this.row = row;
         this.col = col;
-        // this.cellSize of cell
-        this.cellSize = 10;
+        // Size of the cells for drawing
+        this.cellSize = 15;
         this.maze = [];
         for (let i = 0; i < this.row; i++) {
             this.maze[i] = [];
