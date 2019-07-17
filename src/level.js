@@ -26,55 +26,22 @@ export default class Level {
         // TODO use drawCell()
         for (let i = 0; i < this.row; i++) {
             for (let j = 0; j < this.col; j++) {
-                if (this.maze[0][0].walls[2] && this.maze[0][0].walls[3]) {
-                    ctx.fillStyle = '#000';
-                } else {
-                    ctx.fillStyle = '#add8e6';
-                }
-                // console.log(ctx.fillStyle);
-                ctx.fillRect(j * this.cellSize, i * this.cellSize, this.cellSize, this.cellSize);
-                ctx.fillStyle = '#FFFFFF';
-                if (this.maze[i][j].walls[0]) {// left wall
-                    ctx.beginPath();
-                    ctx.moveTo(j * this.cellSize, i * this.cellSize);
-                    ctx.lineTo(j * this.cellSize, i * this.cellSize + this.cellSize);
-                    ctx.lineWidth = wallW;
-                    ctx.stroke();
-                }
-                if (this.maze[i][j].walls[1]) {// top wall
-                    ctx.beginPath();
-                    ctx.moveTo(j * this.cellSize, i * this.cellSize);
-                    ctx.lineTo(j * this.cellSize + this.cellSize, i * this.cellSize);
-                    ctx.lineWidth = wallW;
-                    ctx.stroke();
-                }
-                if (this.maze[i][j].walls[2]) {// right wall
-                    ctx.beginPath();
-                    ctx.moveTo(j * this.cellSize + this.cellSize, i * this.cellSize + this.cellSize);
-                    ctx.lineTo(j * this.cellSize + this.cellSize, i * this.cellSize);
-                    ctx.lineWidth = wallW;
-                    ctx.stroke();
-                }
-                if (this.maze[i][j].walls[3]) {// bottom wall
-                    ctx.beginPath();
-                    ctx.moveTo(j * this.cellSize + this.cellSize, i * this.cellSize + this.cellSize);
-                    ctx.lineTo(j * this.cellSize, i * this.cellSize + this.cellSize);
-                    ctx.lineWidth = wallW;
-                    ctx.stroke();
-                }
+                this.drawCell(ctx, i, j);
             }
         }
     }
 
     drawCell(ctx, row, col) {
-        // console.log('called');
         let wallW = 1;
         // type of cell
-        if (this.maze[row][col].inMaze) { // In maze
-            ctx.fillStyle = '#add8e6';
+        if (this.maze[row][col].inMaze && this.maze[row][col].isGoal) { // is goal
+            ctx.fillStyle = '#FFFF00';
             ctx.fillRect(col * this.cellSize, row * this.cellSize, this.cellSize, this.cellSize);
         } else if (this.maze[row][col].inPath) { // In path
             ctx.fillStyle = '#90EE90';
+            ctx.fillRect(col * this.cellSize, row * this.cellSize, this.cellSize, this.cellSize);
+        } else if (this.maze[row][col].inMaze) { // In maze
+            ctx.fillStyle = '#add8e6';
             ctx.fillRect(col * this.cellSize, row * this.cellSize, this.cellSize, this.cellSize);
         } else { // in neither
             ctx.fillStyle = '#000';
@@ -110,6 +77,8 @@ export default class Level {
             ctx.lineWidth = wallW;
             ctx.stroke();
         }
+
+
     }
 
     animateAlgo(ctx, row, col, ctxList = []) {
@@ -207,6 +176,8 @@ export default class Level {
                 }
             }
         }
+        this.maze[this.maze.length - 1][this.maze[0].length - 1].isGoal = true;
+        this.maze[this.maze.length - 1][this.maze[0].length - 1].inMaze = true;
         return canvasList;
     }
 
@@ -242,7 +213,7 @@ class Cell {
         // used for loop deletion
         this.inPath = false;
         // if cell is goal
-        // this.isGoal = false;
+        this.isGoal = false;
     }
 
     // returns a list of neighbors for this given cell ([row, col])

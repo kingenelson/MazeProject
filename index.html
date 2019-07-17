@@ -1,4 +1,9 @@
 <html>
+<script src="src/game.js" type="module" ></script>
+<script src="src/player.js" type="module" ></script>
+<script src="src/input.js" type="module" ></script>
+<script src="src/index.js" type="module" ></script>
+<script src="src/level.js" type="module" ></script>
   <head>
     <title>My App</title>
     <!-- <meta charset="utf-8" /> -->
@@ -27,17 +32,12 @@
       <h2>Maze</h2>
       <div>
         Rows:
-        <input id="row" type="number" name="rows" value="50">
+        <input id="row" type="number" name="rows" value="5">
         Columns:
-        <input id="col" type="number" name="columns" value="100">
-        <input id="submit" type="submit" name="submit" onclick="script()">
+        <input id="col" type="number" name="columns" value="10">
+        <input id="submit" type="submit" name="submit">
       </div>
     </div>
     <canvas id="gameScreen" width="0" height="0"></canvas>
-    <script src="src/game.js" type="module" ></script>
-    <script src="src/player.js" type="module" ></script>
-    <script src="src/input.js" type="module" ></script>
-    <script src="src/index.js" type="module" ></script>
-    <script src="src/level.js" type="module" ></script>
   </body>
 </html>
