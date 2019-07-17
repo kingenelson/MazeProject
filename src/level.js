@@ -15,18 +15,18 @@ export default class Level {
     }
 
     draw(ctx) {
+        if (typeof ctx === 'undefined') return;
         // sets canvas to fit # of cells
         ctx.canvas.width = (this.col * this.cellSize);
         ctx.canvas.height = (this.row * this.cellSize);
+        // width of the walls
         let wallW = 1;//Math.floor(this.cellSize / 4);
 
         // draws the cells onto the canvas
+        // TODO use drawCell()
         for (let i = 0; i < this.row; i++) {
             for (let j = 0; j < this.col; j++) {
-                ctx.fillStyle = '#add8e6';
-                // ctx.fillStyle = '#FFFFFF';
-                // if (this.maze[i][j].isGoal)
-                //     ctx.fillStyle = '#00FF00';
+                ctx.fillStyle = '#000';
                 ctx.fillRect(j * this.cellSize, i * this.cellSize, this.cellSize, this.cellSize);
                 ctx.fillStyle = '#FFFFFF';
                 if (this.maze[i][j].walls[0]) {// left wall
@@ -61,12 +61,76 @@ export default class Level {
         }
     }
 
+    drawCell(ctx, row, col) {
+        // console.log('called');
+        let wallW = 1;
+        // type of cell
+        if (this.maze[row][col].inMaze) { // In maze
+            ctx.fillStyle = '#add8e6';
+            ctx.fillRect(col * this.cellSize, row * this.cellSize, this.cellSize, this.cellSize);
+        } else if (this.maze[row][col].inPath) { // In path
+            ctx.fillStyle = '#90EE90';
+            ctx.fillRect(col * this.cellSize, row * this.cellSize, this.cellSize, this.cellSize);
+        } else { // in neither
+            ctx.fillStyle = '#000';
+            ctx.fillRect(col * this.cellSize, row * this.cellSize, this.cellSize, this.cellSize);
+        }
+
+        ctx.fillStyle = '#FFFFFF';
+        if (this.maze[row][col].walls[0]) {// left wall
+            ctx.beginPath();
+            ctx.moveTo(col * this.cellSize, row * this.cellSize);
+            ctx.lineTo(col * this.cellSize, row * this.cellSize + this.cellSize);
+            ctx.lineWidth = wallW;
+            ctx.stroke();
+        }
+        if (this.maze[row][col].walls[1]) {// top wall
+            ctx.beginPath();
+            ctx.moveTo(col * this.cellSize, row * this.cellSize);
+            ctx.lineTo(col * this.cellSize + this.cellSize, row * this.cellSize);
+            ctx.lineWidth = wallW;
+            ctx.stroke();
+        }
+        if (this.maze[row][col].walls[2]) {// right wall
+            ctx.beginPath();
+            ctx.moveTo(col * this.cellSize + this.cellSize, row * this.cellSize + this.cellSize);
+            ctx.lineTo(col * this.cellSize + this.cellSize, row * this.cellSize);
+            ctx.lineWidth = wallW;
+            ctx.stroke();
+        }
+        if (this.maze[row][col].walls[3]) {// bottom wall
+            ctx.beginPath();
+            ctx.moveTo(col * this.cellSize + this.cellSize, row * this.cellSize + this.cellSize);
+            ctx.lineTo(col * this.cellSize, row * this.cellSize + this.cellSize);
+            ctx.lineWidth = wallW;
+            ctx.stroke();
+        }
+    }
+
+    animateAlgo(ctx, row, col, ctxList = []) {
+        let canvasFrame = document.createElement('canvas');
+        canvasFrame.width = ctx.canvas.width;
+        canvasFrame.height = ctx.canvas.height;
+        // console.log(canvasFrame);
+        let newctx = canvasFrame.getContext('2d');
+        // console.log(newctx);
+        if (ctxList.length < 1)
+            newctx.drawImage(ctx.canvas, 0, 0);
+        else
+            newctx.drawImage(ctxList[ctxList.length - 1].canvas, 0, 0);
+        this.drawCell(newctx, row, col);
+        ctxList.push(newctx);
+        return ctxList;
+    }
+
     // implementation of wilson's algo
-    wilson_algo() {
+    wilson_algo(ctx) {
         // https://github.com/davidbau/seedrandom
         // ^ See for random seed implementation
-
+        let toDraw = typeof ctx !== 'undefined';
+        let canvasList;
         this.maze[0][0].inMaze = true;
+        if (toDraw) canvasList = this.animateAlgo(ctx, 0, 0);
         // for each cell in maze
         for (let i = 0; i < this.row; i++) {
             for (let j = 0; j < this.col; j++) {
@@ -78,13 +142,15 @@ export default class Level {
                 let lastP = path[path.length - 1];
                 // prev cell's row and col ([row, col])
                 let prev = undefined;
-                // set ceel to be in path
+                // set cell to be in path
                 this.maze[lastP[0]][lastP[1]].inPath = true;
+                if (toDraw) this.animateAlgo(ctx, lastP[0], lastP[1], canvasList);
                 // while not in maze
                 while (!this.maze[lastP[0]][lastP[1]].inMaze) {
                     // find a random path to maze
                     path.push(this.maze[lastP[0]][lastP[1]].nextNeighbor(prev, this.row, this.col));
                     lastP = path[path.length - 1];
+                    if (toDraw) this.animateAlgo(ctx, lastP[0], lastP[1], canvasList);
                     // if loop in path
                     if (this.maze[lastP[0]][lastP[1]].inPath) {
                         //delete loop
@@ -94,6 +160,7 @@ export default class Level {
                             let rem = path.pop();
                             this.maze[rem[0]][rem[1]].inPath = false;
                             stopP = path[path.length - 1];
+                            if (toDraw) this.animateAlgo(ctx, rem[0], rem[1], canvasList);
                         } while (!(lastP[0] == stopP[0] && lastP[1] == stopP[1]));
                     }
                     // set prev
@@ -103,6 +170,7 @@ export default class Level {
                         prev = undefined;
                     // adds the new last point to path
                     this.maze[lastP[0]][lastP[1]].inPath = true;
+                    if (toDraw) this.animateAlgo(ctx, lastP[0], lastP[1], canvasList);
                 }
                 // add each cell of path to maze
                 for (let x = path.length - 1; x > 0; x--) {
@@ -129,9 +197,12 @@ export default class Level {
                         this.maze[curr[0]][curr[1]].walls[2] = false;
                         this.maze[prev[0]][prev[1]].walls[0] = false;
                     }
+                    if (toDraw) this.animateAlgo(ctx, curr[0], curr[1], canvasList);
+                    if (toDraw) this.animateAlgo(ctx, prev[0], prev[1], canvasList);
                 }
             }
         }
+        return canvasList;
     }
 
     // test
@@ -160,7 +231,7 @@ class Cell {
         // left, up, right, down
         this.walls = [true, true, true, true];
         // if visted
-        this.visted = false;
+        // this.visted = false;
         // if in maze
         this.inMaze = false;
         // used for loop deletion
@@ -186,6 +257,7 @@ class Cell {
 
     // returns random next neighbor ([row, col])
     // input: previous Cell's ([row, col]), rows in maze, col in maze
+    // TODO see https://www.youtube.com/watch?v=D8UgRyRnvXU for fix
     nextNeighbor(prev, row, col) {
         let neighbors = this.getNeighbors(row, col);
 

@@ -7,16 +7,17 @@ import Level from './level.js';
 export default class Game {
     constructor() {
         this.gameSize = {
-            x: 0,
-            y: 0
+            x: 1,
+            y: 2
         };
     }
 
-    start() {
-        this.level = new Level(50, 75);
-        this.level.wilson_algo();
+    start(ctx) {
+        this.level = new Level(10, 20);
+        this.level.draw(ctx);
         this.player = new Player(this);
         new InputHandler(this.player);
+        return this.level.wilson_algo(ctx);
 
     }
 
@@ -26,18 +27,7 @@ export default class Game {
     }
 
     update(deltaTime) {
+        // console.log(deltaTime);
         this.player.update(deltaTime);
     }
-
-    // collisionDetection(player, level) {
-    //     // game border collision detection
-    //     if (player.position.x < 2)
-    //         player.position.x = 2;
-    //     if (player.position.y < 2)
-    //         player.position.y = 2;
-    //     if (player.position.x + player.width >  - 2)
-    //         player.position.x = this.gameWidth - this.width - 1;
-    //     if (player.position.y + player.height > this.gameHeight - 2)
-    //         player.position.y = this.gameHeight - this.height;
-    // }
 }
