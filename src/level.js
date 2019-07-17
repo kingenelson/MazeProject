@@ -26,7 +26,12 @@ export default class Level {
         // TODO use drawCell()
         for (let i = 0; i < this.row; i++) {
             for (let j = 0; j < this.col; j++) {
-                ctx.fillStyle = '#000';
+                if (this.maze[0][0].walls[2] && this.maze[0][0].walls[3]) {
+                    ctx.fillStyle = '#000';
+                } else {
+                    ctx.fillStyle = '#add8e6';
+                }
+                // console.log(ctx.fillStyle);
                 ctx.fillRect(j * this.cellSize, i * this.cellSize, this.cellSize, this.cellSize);
                 ctx.fillStyle = '#FFFFFF';
                 if (this.maze[i][j].walls[0]) {// left wall

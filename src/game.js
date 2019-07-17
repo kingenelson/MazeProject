@@ -5,15 +5,15 @@ import Level from './level.js';
 // will have 3 gamestates (menu, game, gameover)
 
 export default class Game {
-    constructor() {
+    constructor(gameRow = 50, gameCol = 100) {
         this.gameSize = {
-            x: 1,
-            y: 2
+            row: gameRow,
+            col: gameCol
         };
     }
 
     start(ctx) {
-        this.level = new Level(10, 20);
+        this.level = new Level(this.gameSize.row, this.gameSize.col);
         this.level.draw(ctx);
         this.player = new Player(this);
         new InputHandler(this.player);
@@ -21,13 +21,13 @@ export default class Game {
 
     }
 
+    // TODO only draw cells that change
     draw(ctx) {
         this.level.draw(ctx);
         this.player.draw(ctx);
     }
 
     update(deltaTime) {
-        // console.log(deltaTime);
         this.player.update(deltaTime);
     }
 }

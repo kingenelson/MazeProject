@@ -6,12 +6,34 @@
         body {
           background: #000;
         }
-        #gameScreen {}
+        #gameScreen {
+          display: none;
+        }
+        #menuContainer {
+          color: white;
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%);
+        }
+        h2 {
+          text-align: center;
+        }
     </style>
   </head>
 
   <body>
-    <canvas id="gameScreen" width="800" height="600"></canvas>
+    <div id="menuContainer">
+      <h2>Maze</h2>
+      <div>
+        Rows:
+        <input id="row" type="number" name="rows" value="50">
+        Columns:
+        <input id="col" type="number" name="columns" value="100">
+        <input id="submit" type="submit" name="submit" onclick="script()">
+      </div>
+    </div>
+    <canvas id="gameScreen" width="0" height="0"></canvas>
     <script src="src/game.js" type="module" ></script>
     <script src="src/player.js" type="module" ></script>
     <script src="src/input.js" type="module" ></script>
