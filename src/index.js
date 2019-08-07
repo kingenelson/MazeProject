@@ -7,9 +7,6 @@ let ctx = canvas.getContext('2d');
 function menu() {
     document.getElementById("menuContainer").style.display = "inline";
     document.getElementById("gameScreen").style.display = "none";
-    document.getElementById("submit").addEventListener("click", function() {
-        script();
-    }, false);
 }
 
 function script() {
@@ -30,6 +27,7 @@ function script() {
             game.update(deltaTime);
             game.draw(ctx);
             if (game.gameOver) {
+                // console.log('test');
                 game.gameOver = false;
                 menu();
                 return;
@@ -51,4 +49,7 @@ function script() {
     let frameID = requestAnimationFrame(gameLoop);
 }
 
+document.getElementById("submit").addEventListener("click", function() {
+    script();
+}, false);
 menu();
